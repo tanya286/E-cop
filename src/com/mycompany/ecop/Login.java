@@ -8,6 +8,7 @@ package com.mycompany.ecop;
  *
  * @author User
  */
+import java.sql.*;
 public class Login extends javax.swing.JFrame {
 
     /**
@@ -30,6 +31,7 @@ public class Login extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jOptionPane1 = new javax.swing.JOptionPane();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -46,6 +48,11 @@ public class Login extends javax.swing.JFrame {
         jLabel3.setText("PASSWORD");
 
         jButton1.setText("Login");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -91,6 +98,36 @@ public class Login extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        Statement st;
+        ResultSet rs;
+        try{
+            String sql= "select count(*) from user_login where username=? and password_hash=? ";
+            PreparedStatement pst= db.con.prepareStatement(sql);
+            
+            pst.setString(1,jTextField1.getText());
+            pst.setString(2, jPasswordField1.getText());
+            
+            rs= pst.executeQuery();
+            int count=0;
+            if(rs.next()){
+                count= rs.getInt(1);
+            }
+            if(count!=0){
+                NewMDIApplication n= new NewMDIApplication();
+                n.setVisible(true);
+                this.dispose();
+            }
+            else{
+                jOptionPane1.showMessageDialog(this,"Invalid Credentials");
+            }
+        }
+        catch(Exception e){
+            jOptionPane1.showMessageDialog(this,e);
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -131,6 +168,7 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JOptionPane jOptionPane1;
     private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
